@@ -8,7 +8,7 @@ from app import app
 
 df = pd.read_csv('data/hujansurabaya.csv')
 
-geo_layout = html.Div([
+pemerintahan_layout = html.Div([
     html.H2('DATA SEKTORAL SURABAYA', 
                 style={"display": "inline",
                        'font-size': '3.65em',
@@ -28,14 +28,14 @@ geo_layout = html.Div([
     html.Div([
         dcc.Link('Geografis', href='geografis', className="tab first"),
         dcc.Link('Pemerintahan', href='/pemerintahan', className="tab"),
-        ], className="row ", style={"display": "block", "margin-top":"30", "margin-bottom": "10px", "textAlign": "center"}),
-    dcc.Dropdown(
-        id='data-input-geografis',
-        options=[{'label': 'Curah Hujan', 'value': 'curah-hujan'}, {'label': 'Hari Hujan', 'value': 'hari-hujan'}],
-        value=['curah-hujan'],
-        multi=True,
-    ),
-    html.Div(id='graphs-geografis')   
+        ], className="row ", style={"display": "block", "margin-top":"10px", "margin-bottom": "10px", "textAlign": "center"}),
+    # dcc.Dropdown(
+    #     id='data-input',
+    #     options=[{'label': 'Curah Hujan', 'value': 'curah-hujan'}, {'label': 'Hari Hujan', 'value': 'hari-hujan'}],
+    #     value=['curah-hujan'],
+    #     multi=True,
+    # ),
+    html.Div(id='graphs')   
 ], className='container')
 
 def curah_hujan():
@@ -71,8 +71,8 @@ def hari_hujan():
     )
 
 @app.callback(
-    Output('graphs-geografis', 'children'),
-    [Input('data-input-geografis', 'value')],
+    Output('graphs', 'children'),
+    [Input('data-input', 'value')],
 )
 def update_graph(data):
     graphs = []
