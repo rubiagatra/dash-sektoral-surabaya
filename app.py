@@ -1,6 +1,6 @@
 import dash
 
-app = dash.Dash()
+app = dash.Dash("Data Sektoral Surabaya")
 server = app.server
 app.config.suppress_callback_exceptions = True
 

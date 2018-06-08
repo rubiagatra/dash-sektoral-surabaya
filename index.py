@@ -21,7 +21,6 @@ def display_page(pathname):
         return bab1_geografis.geo_layout
     elif pathname == '/pemerintahan':
         return bab2_pemerintahan.pemerintahan_layout
-        
     else:
         print(pathname)
         return '404'

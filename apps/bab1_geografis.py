@@ -14,7 +14,9 @@ df = pd.read_csv("data/hujansurabaya.csv")
 dropdown_menu = dcc.Dropdown(id='data-input-' + APPS_NAME,
                             options=[{'label': 'Geografis: Rata - Rata Curah Hujan', 'value': 'curah-hujan'}, 
                                     {'label': 'Geografis: Jumlah Hari Hujan', 'value': 'hari-hujan'},
-                                    {'label': 'Geografis: Kelembapan Udara', 'value': 'kelembapan-udara'}],
+                                    {'label': 'Geografis: Kelembapan Udara', 'value': 'kelembapan-udara'},
+                                    {'label': 'Geografis: Temperatur Udara', 'value': 'temperatur-udara'},
+                                    {'label': 'Geografis: Tekanan Udara', 'value': 'tekanan-udara'}],
                             value=['curah-hujan'],
                             multi=True)
 
@@ -104,6 +106,110 @@ def kelembapan_udara(value_name: str):
         style={"width": "50%", "display": "inline-block"}
     )]
 
+def temperatur_udara(value_name: str):
+    juanda_max = df_geo['Maksimal Temperatur (Celcius)  di Juanda']
+    juanda_min = df_geo['Minimal Temperatur (Celcius)  di Juanda']
+    perak = df_geo["Rata-rata Temperatur (Celcius) di Tanjung Perak"]
+    data_juanda_max = go.Scatter(x=df.Bulan, 
+                                y=juanda_max, 
+                                name="Max", 
+                                line=dict(color=('rgb(205, 12, 24)'),
+                                    width=4,
+                                ))
+    data_juanda_min = go.Scatter(x=df.Bulan, 
+                                y=juanda_min, 
+                                name="Min", 
+                                line=dict(color=('rgb(205, 12, 24)'),
+                                    width=4,
+                                ))
+    data_juanda_mean = go.Scatter(x=df.Bulan, 
+                                y=(juanda_max + juanda_min) / 2, 
+                                name="Rata-rata", 
+                                line=dict(color=('rgb(205, 12, 24)'),
+                                    width=4,
+                                    dash='dot',
+                                ))
+    data_perak_mean = go.Scatter(x=df.Bulan, 
+                            y=perak, 
+                            name="Rata-rata", 
+                            mode="lines+markers",
+                            )
+    data_juanda = [data_juanda_max, data_juanda_min, data_juanda_mean]
+    data_perak = [data_perak_mean]
+    layout_juanda = dict(title='Temperatur Udara Stasiun Juanda 2016',
+                xaxis=dict(title='Bulan'),
+                yaxis=dict(title='Temperatur Udara (Celsius)'),
+                )
+    layout_perak = dict(title='Rata - rata Temperatur Udara Stasiun Perak 2016',
+                xaxis=dict(title='Bulan'),
+                yaxis=dict(title='Kelembapan Udara (Celsius)'),
+                )
+    fig_juanda = dict(data=data_juanda, layout=layout_juanda)
+    fig_perak = dict(data=data_perak, layout=layout_perak)
+    
+    return [dcc.Graph(
+        id=value_name + "-juanda",
+        figure=fig_juanda,
+        style={"width": "50%", "display": "inline-block"}
+    ),
+    dcc.Graph(
+        id=value_name + "-perak",
+        figure=fig_perak,
+        style={"width": "50%", "display": "inline-block"}
+    )]
+
+def tekanan_udara(value_name: str):
+    juanda_max = df_geo['Maksimal Tekanan Udara (Mbs) di Juanda']
+    juanda_min = df_geo['Minimal Tekanan Udara (Mbs) di Juanda']
+    perak = df_geo['Rata-rata Tekanan Udara (Mbs) di Tanjung Perak']
+    data_juanda_max = go.Scatter(x=df.Bulan, 
+                                y=juanda_max, 
+                                name="Max", 
+                                line=dict(color=('rgb(205, 12, 24)'),
+                                    width=4,
+                                ))
+    data_juanda_min = go.Scatter(x=df.Bulan, 
+                                y=juanda_min, 
+                                name="Min", 
+                                line=dict(color=('rgb(205, 12, 24)'),
+                                    width=4,
+                                ))
+    data_juanda_mean = go.Scatter(x=df.Bulan, 
+                                y=(juanda_max + juanda_min) / 2, 
+                                name="Rata-rata", 
+                                line=dict(color=('rgb(205, 12, 24)'),
+                                    width=4,
+                                    dash='dot',
+                                ))
+    data_perak_mean = go.Scatter(x=df.Bulan, 
+                            y=perak, 
+                            name="Rata-rata", 
+                            mode="lines+markers",
+                            )
+    data_juanda = [data_juanda_max, data_juanda_min, data_juanda_mean]
+    data_perak = [data_perak_mean]
+    layout_juanda = dict(title='Tekanan Udara Stasiun Juanda 2016',
+                xaxis=dict(title='Bulan'),
+                yaxis=dict(title='Tekanan Udara (Mbs)'),
+                )
+    layout_perak = dict(title='Rata - rata Tekanan Udara Stasiun Perak 2016',
+                xaxis=dict(title='Bulan'),
+                yaxis=dict(title='Tekanan Udara (Celsius)'),
+                )
+    fig_juanda = dict(data=data_juanda, layout=layout_juanda)
+    fig_perak = dict(data=data_perak, layout=layout_perak)
+    
+    return [dcc.Graph(
+        id=value_name + "-juanda",
+        figure=fig_juanda,
+        style={"width": "50%", "display": "inline-block"}
+    ),
+    dcc.Graph(
+        id=value_name + "-perak",
+        figure=fig_perak,
+        style={"width": "50%", "display": "inline-block"}
+    )]
+
 
 @app.callback(
     Output('graphs-' + APPS_NAME, 'children'),
@@ -118,4 +224,8 @@ def update_graph(data):
             graphs.append(hari_hujan(x))
         elif x == 'kelembapan-udara':
             graphs.extend(kelembapan_udara(x))
+        elif x == 'temperatur-udara':
+            graphs.extend(temperatur_udara(x))
+        elif x == 'tekanan-udara':
+            graphs.extend(tekanan_udara(x))
     return graphs
