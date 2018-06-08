@@ -1,84 +1,62 @@
 import dash_core_components as dcc   
-import dash_html_components as html 
 import plotly.graph_objs as go  
 from dash.dependencies import Input, Output
 import pandas as pd 
 
+from apps import template
 from app import app
 
+APPS_NAME = 'geografis'
+
 df = pd.read_csv('data/hujansurabaya.csv')
+dropdown_menu = dcc.Dropdown(id='data-input-' + APPS_NAME,
+                            options=[{'label': 'Geografis: Rata - Rata Curah Hujan', 'value': 'curah-hujan'}, {'label': 'Geografis: Jumlah Hari Hujan', 'value': 'hari-hujan'}],
+                            value=['curah-hujan'],
+                            multi=True)
 
-geo_layout = html.Div([
-    html.H2('DATA SEKTORAL SURABAYA', 
-                style={"display": "inline",
-                       'font-size': '3.65em',
-                       'margin-left': '7px',
-                       'font-weight': 'bolder',
-                       'font-family': 'Product Sans',
-                       'color': "rgba(117, 117, 117, 0.95)",
-                       'margin-top': '20px',
-                       'margin-bottom': '0',
-                        }),
-    html.Img(src="https://i.imgur.com/Glih9lH.png",
-                style={
-                    'height': '100px',
-                    'float': 'right',
-                    'margin-bottom': '10px',
-                }),
-    html.Div([
-        dcc.Link('Geografis', href='geografis', className="tab first"),
-        dcc.Link('Pemerintahan', href='/pemerintahan', className="tab"),
-        ], className="row ", style={"display": "block", "margin-top":"30", "margin-bottom": "10px", "textAlign": "center"}),
-    dcc.Dropdown(
-        id='data-input-geografis',
-        options=[{'label': 'Curah Hujan', 'value': 'curah-hujan'}, {'label': 'Hari Hujan', 'value': 'hari-hujan'}],
-        value=['curah-hujan'],
-        multi=True,
-    ),
-    html.Div(id='graphs-geografis')   
-], className='container')
+geo_layout = template.template(APPS_NAME, dropdown_menu) 
 
-def curah_hujan():
+def curah_hujan(value_name: str):
     perak = df["Curah Hujan (Perak)"]
     juanda = df["Curah Hujan (Juanda)"] 
     data1 = go.Scatter(x=df.Bulan, y=perak, name="Stasiun Perak II", mode="lines+markers")
     data2 = go.Scatter(x=df.Bulan, y=juanda, name="Stasiun Juanda", mode="lines+markers")
     data = [data1, data2]
-    layout = dict(title = 'Rata Rata Curah Hujan di Surabaya Tahun 2016',
-                xaxis = dict(title = 'Bulan'),
-                yaxis = dict(title = 'Curah Hujan (mm)'),
+    layout = dict(title='Rata Rata Curah Hujan di Surabaya Tahun 2016',
+                xaxis=dict(title = 'Bulan'),
+                yaxis=dict(title = 'Curah Hujan (mm)'),
                   )
     fig = dict(data=data, layout=layout)
     return dcc.Graph(
-        id='curah',
+        id=value_name,
         figure=fig,
     )
 
-def hari_hujan():
+def hari_hujan(value_name: str):
     perak = df["Hari Hujan (Perak)"]
     juanda = df["Hari Hujan (Juanda)"]
     data1 = go.Scatter(x=df.Bulan, y=perak, name="Stasiun Perak II", mode="lines+markers")
     data2 = go.Scatter(x=df.Bulan, y=juanda, name="Stasiun Juanda", mode="lines+markers")
     data = [data1, data2]
     layout = dict(title = 'Jumlah Hari Hujan di Surabaya Tahun 2016',
-                xaxis = dict(title = 'Bulan'),
-                yaxis = dict(title = 'Jumlah Hari Hujan'),
+                xaxis=dict(title = 'Bulan'),
+                yaxis=dict(title = 'Jumlah Hari Hujan'),
                   )
     fig = dict(data=data, layout=layout)
     return dcc.Graph(
-        id='hari',
+        id=value_name,
         figure=fig,
     )
 
 @app.callback(
-    Output('graphs-geografis', 'children'),
-    [Input('data-input-geografis', 'value')],
+    Output('graphs-' + APPS_NAME, 'children'),
+    [Input('data-input-' + APPS_NAME, 'value')],
 )
 def update_graph(data):
     graphs = []
     for x in data:
         if x == 'curah-hujan':
-            graphs.append(curah_hujan())
+            graphs.append(curah_hujan(x))
         elif x == 'hari-hujan':
-            graphs.append(hari_hujan())
+            graphs.append(hari_hujan(x))
     return graphs
