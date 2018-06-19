@@ -8,7 +8,7 @@ from app import app
 
 APPS_NAME = 'pemerintahan'
 
-dropdown_menu = dcc.Dropdown(id='data-input' + APPS_NAME) 
+dropdown_menu = dcc.Dropdown(id='data-input-' + APPS_NAME) 
 pemerintahan_layout = template.template(APPS_NAME, dropdown_menu) 
 
 

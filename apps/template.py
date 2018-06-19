@@ -28,7 +28,7 @@ def template(template_name: str, dropdown_menu):
             dcc.Link('Pertanian', href='/pertanian', className="tab"),
             dcc.Link('Perdagangan', href='/perdagangan', className="tab"),
             dcc.Link('Transportasi dan Wisata', href='/transportasi', className="tab"),
-            dcc.Link('Pendapatan', href='/pemerintahan', className="tab"),
+            dcc.Link('Pendapatan', href='/pendaptan', className="tab"),
             ], className="row ", style={"display": "block", "margin-top":"30", "margin-bottom": "10px", "textAlign": "center"}),
         dropdown_menu,
         html.Div(id='graphs-' + template_name)   
