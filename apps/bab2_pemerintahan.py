@@ -83,23 +83,6 @@ def kecelakaan_lalulintas(value_name: str):
         figure=fig,
     )
 
-def kecelakaan_lalulintas(value_name: str):
-    kecelakaan = df["Jumlah Kecelakaan"]
-
-    data1 = go.Bar(x=df.Bulan, y=kecelakaan)
-    data2 = go.Scatter(x=df.Bulan, y=kecelakaan, mode="lines+markers")
-        
-    data = [data1, data2]
-    layout = dict(title='Banyaknya Kecelakaan Lalu Lintas Tahun 2016',
-                xaxis=dict(title='Bulan'),
-                yaxis=dict(title='Jumlah'),
-                barmode='group',
-                showlegend=False)
-    fig = dict(data=data, layout=layout)
-    return dcc.Graph(
-        id=value_name,
-        figure=fig,
-    )
 
 def korban_kecelakaan(value_name: str):
     meninggal = df["Korban Meninggal"]
