@@ -1,4 +1,5 @@
 import dash_core_components as dcc   
+import dash_html_components as html
 import plotly.graph_objs as go  
 from dash.dependencies import Input, Output
 import pandas as pd 
@@ -8,15 +9,15 @@ from app import app
 
 APPS_NAME = 'geografis'
 
-df_geo = pd.read_csv("data/Bab 1_Geografis_v2.0_2016.csv")
-df = pd.read_csv("data/hujansurabaya.csv")
+df = pd.read_csv("data/Bab 1_Geografis_v2.0_2016.csv")
 
 dropdown_menu = dcc.Dropdown(id='data-input-' + APPS_NAME,
                             options=[{'label': 'Geografis: Rata - Rata Curah Hujan', 'value': 'curah-hujan'}, 
                                     {'label': 'Geografis: Jumlah Hari Hujan', 'value': 'hari-hujan'},
                                     {'label': 'Geografis: Kelembapan Udara', 'value': 'kelembapan-udara'},
                                     {'label': 'Geografis: Temperatur Udara', 'value': 'temperatur-udara'},
-                                    {'label': 'Geografis: Tekanan Udara', 'value': 'tekanan-udara'}],
+                                    {'label': 'Geografis: Tekanan Udara', 'value': 'tekanan-udara'},
+                                    {'label': 'Geografis: Plot Interaktif', 'value': 'plot-interaktif'}],
                             value=['curah-hujan'],
                             multi=True)
 
@@ -55,9 +56,9 @@ def hari_hujan(value_name: str):
     )
 
 def kelembapan_udara(value_name: str):
-    juanda_max = df_geo['Maksimal Kelembaban (%) di Juanda']
-    juanda_min = df_geo['Minimal Kelembaban (%) di Juanda']
-    perak = df_geo["Rata-rata Kelembaban (%) di Tanjung Perak"]
+    juanda_max = df['Maksimal Kelembaban (%) di Juanda']
+    juanda_min = df['Minimal Kelembaban (%) di Juanda']
+    perak = df["Rata-rata Kelembaban (%) di Tanjung Perak"]
     data_juanda_max = go.Scatter(x=df.Bulan, 
                                 y=juanda_max, 
                                 name="Max", 
@@ -107,9 +108,9 @@ def kelembapan_udara(value_name: str):
     )]
 
 def temperatur_udara(value_name: str):
-    juanda_max = df_geo['Maksimal Temperatur (Celcius)  di Juanda']
-    juanda_min = df_geo['Minimal Temperatur (Celcius)  di Juanda']
-    perak = df_geo["Rata-rata Temperatur (Celcius) di Tanjung Perak"]
+    juanda_max = df['Maksimal Temperatur (Celcius)  di Juanda']
+    juanda_min = df['Minimal Temperatur (Celcius)  di Juanda']
+    perak = df["Rata-rata Temperatur (Celcius) di Tanjung Perak"]
     data_juanda_max = go.Scatter(x=df.Bulan, 
                                 y=juanda_max, 
                                 name="Max", 
@@ -159,9 +160,9 @@ def temperatur_udara(value_name: str):
     )]
 
 def tekanan_udara(value_name: str):
-    juanda_max = df_geo['Maksimal Tekanan Udara (Mbs) di Juanda']
-    juanda_min = df_geo['Minimal Tekanan Udara (Mbs) di Juanda']
-    perak = df_geo['Rata-rata Tekanan Udara (Mbs) di Tanjung Perak']
+    juanda_max = df['Maksimal Tekanan Udara (Mbs) di Juanda']
+    juanda_min = df['Minimal Tekanan Udara (Mbs) di Juanda']
+    perak = df['Rata-rata Tekanan Udara (Mbs) di Tanjung Perak']
     data_juanda_max = go.Scatter(x=df.Bulan, 
                                 y=juanda_max, 
                                 name="Max", 
@@ -210,6 +211,48 @@ def tekanan_udara(value_name: str):
         style={"width": "50%", "display": "inline-block"}
     )]
 
+def scatter_plot(value_name: str):
+    dropdown_options = [{'label': 'Hari Hujan (Juanda)', 'value': 'hari-hujan-juanda'},
+                        {'label': 'Hari Hujan (Perak)', 'value': 'hari-hujan-perak'},
+                        {'label': "Curah Hujan (Perak)", 'value': 'curah-hujan-perak'},
+                        {'label': 'Curah Hujan (Juanda)', 'value': 'curah-hujan-juanda'},
+                        ]
+    x = dcc.Dropdown(id=value_name + "-x-" + APPS_NAME,
+                            options=dropdown_options,
+                            value='hari-hujan-juanda',
+                            )
+    y = dcc.Dropdown(id=value_name + "-y-" + APPS_NAME,
+                            options=dropdown_options,
+                            value='hari-hujan-perak',
+                            )
+    return [html.H2("Plot Interaktif"), x, y, dcc.Graph(id=value_name + "-" + APPS_NAME)]
+
+
+@app.callback(
+    Output('plot-interaktif-' + APPS_NAME, 'figure'),
+    [Input('plot-interaktif-x-' + APPS_NAME, 'value'),
+    Input('plot-interaktif-y-' + APPS_NAME, 'value')],
+)
+def update_interactive_graph(x_axis, y_axis):
+    options = {
+        'hari-hujan-perak': "Hari Hujan (Perak)",
+        'hari-hujan-juanda': "Hari Hujan (Juanda)",
+        'curah-hujan-perak': "Curah Hujan (Perak)" ,
+        'curah-hujan-juanda': "Curah Hujan (Juanda)" 
+    }
+    data = go.Scatter(x=df[options[x_axis]], 
+                                    y=df[options[y_axis]], 
+                                    name="Plot Interaktif", 
+                                    mode="markers",
+                                    )
+    data = [data]
+    layout = dict(title='PLOT INTERAKTIF GEOGRAFIS',
+                xaxis=dict(title=options[x_axis]),
+                yaxis=dict(title=options[y_axis]),
+                  )
+    fig = dict(data=data, layout=layout)
+    return fig
+
 
 @app.callback(
     Output('graphs-' + APPS_NAME, 'children'),
@@ -228,4 +271,6 @@ def update_graph(data):
             graphs.extend(temperatur_udara(x))
         elif x == 'tekanan-udara':
             graphs.extend(tekanan_udara(x))
+        elif x == 'plot-interaktif':
+            graphs.extend(scatter_plot(x))
     return graphs
