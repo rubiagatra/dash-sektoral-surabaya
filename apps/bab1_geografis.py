@@ -9,7 +9,7 @@ from app import app
 
 APPS_NAME = 'geografis'
 
-df = pd.read_csv("data/Bab 1_Geografis_v2.0_2016.csv")
+df = pd.read_csv("data/Bab 1/Bab 1_Geografis_v2.0_2016.csv")
 
 dropdown_menu = dcc.Dropdown(id='data-input-' + APPS_NAME,
                             options=[{'label': 'Geografis: Rata - Rata Curah Hujan', 'value': 'curah-hujan'}, 

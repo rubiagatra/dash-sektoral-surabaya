@@ -8,7 +8,7 @@ from app import app
 
 APPS_NAME = 'pemerintahan'
 
-df = pd.read_csv('data/Bab 2_Pemerintahan dan Keamanan_v1.0_2016.csv')
+df = pd.read_csv('data/Bab 2/Bab 2_Pemerintahan dan Keamanan_v1.0_2016.csv')
 
 dropdown_menu = dcc.Dropdown(id='data-input-' + APPS_NAME,
                             options=[{'label': 'Pemerintahan: Produk Hukum Yang Diterbitkan', 'value': 'produk-hukum'},
