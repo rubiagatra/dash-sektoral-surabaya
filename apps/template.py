@@ -4,7 +4,7 @@ import dash_core_components as dcc
 
 def template(template_name: str, dropdown_menu):
     return html.Div([
-        html.H2('DATA SEKTORAL SURABAYA', 
+        html.H2('DATA SEKTORAL SURABAYA 2017', 
                     style={"display": "inline",
                         'font-size': '3.65em',
                         'margin-left': '7px',
