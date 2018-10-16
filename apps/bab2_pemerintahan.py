@@ -27,7 +27,7 @@ def surat_imb(value_name: str):
     data_3 = go.Bar(x=df.Tahun, y=realisasi, name="Realisasi")
         
     data = [data_1, data_2, data_3]
-    layout = dict(title='Bab 2-Banyaknya Surat Ijin Mendirikan Bangunan (IMB) yang dikeluarkan Menurut Jenis Bangunan tahun 2009-2017',
+    layout = dict(title='Banyaknya Surat Ijin Mendirikan Bangunan (IMB) yang dikeluarkan Menurut Jenis Bangunan tahun 2009-2017',
                 xaxis=dict(title='Tahun'),
                 yaxis=dict(title='Jumlah'),
                 barmode='group')
