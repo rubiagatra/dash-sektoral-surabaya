@@ -24,7 +24,7 @@ def template(template_name: str, dropdown_menu):
             dcc.Link('Geografis', href='/geografis', className="tab first"),
             dcc.Link('Pemerintahan', href='/pemerintahan', className="tab"),
             dcc.Link('Penduduk', href='/penduduk', className="tab"),
-            dcc.Link('Sosial Budaya', href='/sosial-budaya', className="tab"),
+            dcc.Link('Sosial', href='/sosial', className="tab"),
             dcc.Link('Pertanian', href='/pertanian', className="tab"),
             dcc.Link('Perdagangan', href='/perdagangan', className="tab"),
             dcc.Link('Transportasi dan Wisata', href='/transportasi', className="tab"),
