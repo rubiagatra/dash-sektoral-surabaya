@@ -4,6 +4,7 @@ from dash.dependencies import Input, Output
 
 from app import app
 from apps import bab1_geografis, bab2_pemerintahan, bab3_penduduk, bab4_sosial, bab5_pertanian
+from apps import bab6_industri 
 
 
 app.layout = html.Div([
@@ -27,6 +28,8 @@ def display_page(pathname):
         return bab4_sosial.sosial_layout
     elif pathname == '/pertanian': 
         return bab5_pertanian.pertanian_layout
+    elif pathname == '/industri': 
+        return bab6_industri.industri_layout
     else:
         print(pathname)
         return '404'
