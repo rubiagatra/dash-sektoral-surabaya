@@ -34,7 +34,7 @@ def produksi_air(value_name: str):
     data_7 = go.Scatter(x=df.Bulan, y=krpl_3, name="KRPL III", mode="lines+markers")
 
 
-    data = [data_1, data_2, data_3, data_4, data_6, data_7]
+    data = [data_1, data_2, data_3, data_4, data_5, data_6, data_7]
     layout = dict(title='Produksi Air Minum per Bulan tahun 2017',
                 xaxis=dict(title='Bulan'),
                 yaxis=dict(title='Jumlah'),
